@@ -33,6 +33,6 @@ uv run main.py
 | `on_order`         | O(log k)   |
 | `on_cancel`        | O(log k)   |
 | `on_execute`       | O(log k)   |
-| `get_price_levels` | O(k)       |
+| `get_price_levels` | O(d)       |
 | `get_quantity`     | O(d)       |
 | `notify_subscribers`| O(d) |
