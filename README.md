@@ -35,3 +35,4 @@ uv run main.py
 | `on_execute`       | O(log k)   |
 | `get_price_levels` | O(k)       |
 | `get_quantity`     | O(d)       |
+| `notify_subscribers`| O(d) |
