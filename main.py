@@ -33,8 +33,9 @@ def consumer(queue: Queue, order_book: Orderbook) -> None:
             order_book.on_execute(msg)
 
 
-def quantity_strategy(symbol: str, event_queue: Queue, depth: int = 3) -> None:
+def quantity_strategy(symbol: str, order_book: Orderbook, depth: int = 3) -> None:
     """Demonstrates API for quantity to a given depth."""
+    event_queue = order_book.subscribe(depth)
     while True:
         event = event_queue.get()
         if event is STOP_SENTINEL:
@@ -45,8 +46,9 @@ def quantity_strategy(symbol: str, event_queue: Queue, depth: int = 3) -> None:
         print(f"[{symbol} qty @ depth {depth}] bid: {bid_qty}, ask: {ask_qty}")
 
 
-def top_of_book_strategy(symbol: str, event_queue: Queue) -> None:
+def top_of_book_strategy(symbol: str, order_book: Orderbook) -> None:
     """Demonstrates API for top of book price & quantity."""
+    event_queue = order_book.subscribe()
     while True:
         event = event_queue.get()
         if event is STOP_SENTINEL:
@@ -68,8 +70,8 @@ def main():
         threads.extend([
             Thread(target=producer, args=(symbol, queue), daemon=True),
             Thread(target=consumer, args=(queue, book), daemon=True),
-            Thread(target=quantity_strategy, args=(symbol, book.subscribe()), daemon=True),
-            Thread(target=top_of_book_strategy, args=(symbol, book.subscribe()), daemon=True),
+            Thread(target=quantity_strategy, args=(symbol, book), daemon=True),
+            Thread(target=top_of_book_strategy, args=(symbol, book), daemon=True),
         ])
 
     for t in threads:
